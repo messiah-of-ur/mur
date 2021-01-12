@@ -1,0 +1,9 @@
+[submodule "code/muir"]
+	path = code/muir
+	url = https://github.com/messiah-of-ur/muir.git
+[submodule "code/murker"]
+	path = code/murker
+	url = https://github.com/messiah-of-ur/murker.git
+[submodule "code/murabi"]
+	path = code/murabi
+	url = https://github.com/messiah-of-ur/murabi.git

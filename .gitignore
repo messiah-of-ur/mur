@@ -1,0 +1,7 @@
+# Go build artefacts
+**/pkg/*
+**/src/*
+
+# Job artefacts
+**/log/*
+.proc
