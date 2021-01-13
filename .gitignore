@@ -1,7 +1,10 @@
 # Go build artefacts
-**/pkg/*
-**/src/*
+**/pkg
+**/src
+**/bin
+
+# Python
+**/__pycache__
 
 # Job artefacts
-**/log/*
-.proc
+**/gen
