@@ -1,7 +1,9 @@
 import os
+import sys
 import logging
 import subprocess
 import signal
+import psutil
 from typing import List
 from pathlib import Path
 
@@ -62,7 +64,7 @@ class MurkerLifecycle(Lifecycle):
                 f.write('{}\n'.format(port))
 
             logging.info('Done.')
-    
+
     def kill(self) -> None:
         proc_store = self._proc_store()
 
@@ -70,10 +72,13 @@ class MurkerLifecycle(Lifecycle):
             pids = f.readlines()
             
             for pid in pids:
-                logging.info('Killing murker with pid {}...'.format(int(pid)))
-                os.kill(int(pid), signal.SIGTERM)
+                logging.info('Killing murker with pid {}...'.format(pid))
+
+                p = psutil.Process(int(pid))
+                p.terminate()
+
                 logging.info('Done.')
-        
+                
         open(proc_store, 'w').close()
 
         port_store = self._port_store()
@@ -97,6 +102,7 @@ class MurkerLifecycle(Lifecycle):
 
     def _murker_dir(self) -> Path:
         code_dir = os.getenv(Environment.CODE_DIR.value)
+        print(code_dir)
         return Path(code_dir, JOB_NAME)
 
     def _murker_binary_path(self) -> Path:
