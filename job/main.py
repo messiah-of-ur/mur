@@ -25,29 +25,39 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='subparser')
     
-    murker_parser = subparsers.add_parser('murker')
+    murker_parser = subparsers.add_parser(name='murker')
 
     murker_subparsers = murker_parser.add_subparsers(dest='murker_subparser')
 
-    murker_deploy_parser = murker_subparsers.add_parser('deploy')
+    murker_deploy_parser = murker_subparsers.add_parser(name='deploy')
     murker_deploy_parser.add_argument("-ports", help="Ports of murkers to run (1 murker instance per port)", required=True, nargs='+', type=int)
 
-    murker_deploy_parser = murker_subparsers.add_parser('destroy')
+    murker_subparsers.add_parser(name='destroy')
+    murker_subparsers.add_parser(name='ports')
 
     return parser.parse_args()
 
 
+def run_murker_subcommand(args: argparse.Namespace) -> None:
+    if 'ports' in args:
+        ports = args.ports
+    else:
+        ports = []
+
+    murkerLifecycle = MurkerLifecycle(ports)
+
+    if args.murker_subparser == 'deploy':
+        deploy_murkers(murkerLifecycle)
+    elif args.murker_subparser == 'destroy':
+        destroy_murkers(murkerLifecycle)
+    elif args.murker_subparser == 'ports':
+        active_ports = murkerLifecycle.active_ports()
+        print(active_ports)
+
+
 if __name__ == '__main__':
     configure_logging(logging.INFO)
-
     args = parse_args()
 
     if args.subparser == 'murker':
-        if args.murker_subparser == 'deploy':
-            murkerLifecycle = MurkerLifecycle(args.ports)
-            deploy_murkers(murkerLifecycle)
-        elif args.murker_subparser == 'destroy':
-            murkerLifecycle = MurkerLifecycle([])
-            destroy_murkers(murkerLifecycle)
-
-
+        run_murker_subcommand(args)

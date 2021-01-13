@@ -40,6 +40,7 @@ class MurkerLifecycle(Lifecycle):
 
         bin = self._murker_binary_path()
         proc_store = self._proc_store()
+        port_store = self._port_store()
 
         for port in self.ports:
             logging.info('Starting murker on port {}...'.format(port))
@@ -57,6 +58,9 @@ class MurkerLifecycle(Lifecycle):
             with open(proc_store, 'a') as f:
                 f.write('{}\n'.format(murker.pid))
             
+            with open(port_store, 'a') as f:
+                f.write('{}\n'.format(port))
+
             logging.info('Done.')
     
     def kill(self) -> None:
@@ -71,6 +75,22 @@ class MurkerLifecycle(Lifecycle):
                 logging.info('Done.')
         
         open(proc_store, 'w').close()
+
+        port_store = self._port_store()
+        open(port_store, 'w').close()
+
+    def active_ports(self) -> List[int]:
+        port_store = self._port_store()
+
+        ports = []
+
+        with open(port_store, 'r') as f:
+            lines = f.readlines()
+
+            for line in lines:
+                ports.append(int(line))
+
+        return ports
 
     def _name(self) -> Path:
         return JOB_NAME
@@ -87,6 +107,10 @@ class MurkerLifecycle(Lifecycle):
         gen_dir = self._gen_dir()
         return Path(gen_dir, 'proc_store')
     
+    def _port_store(self) -> Path:
+        gen_dir = self._gen_dir()
+        return Path(gen_dir, 'port_store')
+
     def _run_process_from_murker_dir(self, cmd: List[str]) -> None:
         murker_dir = self._murker_dir()
         self._run_process_from_dir(murker_dir, cmd)
