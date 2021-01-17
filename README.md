@@ -10,7 +10,7 @@ You need the following installed:
 - direnv (for *nix only)
 - :snake: python3
 - pip & pipenv
-- psql (download [here](https://www.enterprisedb.com/download-postgresql-binaries?fbclid=IwAR3XSzTmFPKzGJiugdcBm77dZ3yHjVqjfZYkclWb1ulNMvxClWE-Eyxxv5s))
+- psql (download [here](https://www.enterprisedb.com/download-postgresql-binaries?fbclid=IwAR3XSzTmFPKzGJiugdcBm77dZ3yHjVqjfZYkclWb1ulNMvxClWE-Eyxxv5s)) (if under Windows, make sure psql.exe is in path)
 
 ## Deployment under :penguin: :apple: *nix
 
