@@ -1,8 +1,6 @@
 import os
-import sys
 import logging
 import subprocess
-import signal
 import psutil
 from typing import List
 from pathlib import Path
@@ -13,12 +11,15 @@ from job.lifecycle import Lifecycle, Environment
 MURKER_EXECUTABLE_PATH='cmd/murker/murker.go'
 JOB_NAME='murker'
 MURKER_PORT='MURKER_PORT'
+MURABI_ADDR="MURABI_ADDR"
+HOST='localhost'
 
 
 class MurkerLifecycle(Lifecycle):
-    def __init__(self, ports: List[int]):
+    def __init__(self, ports: List[int], murabi_port:int):
         self.ports = ports
-    
+        self.murabi_port =murabi_port
+
     def fetch_dependencies(self) -> None:
         logging.info('Fetching murker dependencies...')
 
@@ -49,6 +50,7 @@ class MurkerLifecycle(Lifecycle):
 
             murker_env = os.environ.copy()
             murker_env[MURKER_PORT] = str(port)
+            murker_env[MURABI_ADDR] = HOST + ":" + str(self.murabi_port)
 
             murker = None
 

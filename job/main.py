@@ -31,6 +31,7 @@ def parse_args() -> argparse.Namespace:
 
     murker_deploy_parser = murker_subparsers.add_parser(name='deploy')
     murker_deploy_parser.add_argument("-ports", help="Ports of murkers to run (1 murker instance per port)", required=True, nargs='+', type=int)
+    murker_deploy_parser.add_argument("-murabi-port", help="Port of murabi to access", required=True, type=int)
 
     murker_subparsers.add_parser(name='destroy')
     murker_subparsers.add_parser(name='ports')
@@ -44,7 +45,12 @@ def run_murker_subcommand(args: argparse.Namespace) -> None:
     else:
         ports = []
 
-    murkerLifecycle = MurkerLifecycle(ports)
+    if 'murabi_port' in args:
+        murabi_port = args.murabi_port
+    else:
+        murabi_port = 8080
+
+    murkerLifecycle = MurkerLifecycle(ports, murabi_port)
 
     if args.murker_subparser == 'deploy':
         deploy_murkers(murkerLifecycle)

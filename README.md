@@ -26,7 +26,7 @@ pipenv install
 pipenv shell
 
 # Start a few murkers (an instance is started on each port).
-python3 job/main.py murker deploy -ports 8080 8081 8082 9000
+python3 job/main.py murker deploy -ports 8080 8081 8082 9000 -murabi-port 8080
 
 # Check for their existence.
 sudo lsof -i -P -n | grep LISTEN
@@ -50,7 +50,7 @@ Rem Open the python virtual environment
 py -m pipenv shell
 
 Rem Start a few murkers (an instance is started on each port).
-py job/main.py murker deploy -ports 8080 8081 8082 9000
+py job/main.py murker deploy -ports 8080 8081 8082 9000 -murabi-port 8080
 
 Rem Check for their existence.
 netstat -ano
