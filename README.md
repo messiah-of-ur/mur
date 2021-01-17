@@ -10,6 +10,7 @@ You need the following installed:
 - direnv (for *nix only)
 - :snake: python3
 - pip & pipenv
+- psql (download [here](https://www.enterprisedb.com/download-postgresql-binaries?fbclid=IwAR3XSzTmFPKzGJiugdcBm77dZ3yHjVqjfZYkclWb1ulNMvxClWE-Eyxxv5s))
 
 ## Deployment under :penguin: :apple: *nix
 
@@ -37,6 +38,15 @@ sudo lsof -i -P -n | grep LISTEN
 
 # You can kill the murkers with.
 python3 job/main.py murker destroy
+```
+
+### MurDB
+
+```bash
+python3 job/main.py db deploy
+
+# If you wish to destroy it
+python3 job/main.py db destroy
 ```
 
 ### :dragon_face: Murabi
@@ -77,12 +87,26 @@ Rem Kill the murkers.
 py job/main.py murker destroy
 ```
 
+### MurDB
+
+```bat
+py job/main.py db deploy
+
+Rem If you wish to destroy it
+py job/main.py db destroy
+```
+
+
 ### :dragon_face: Murabi
 
-```bash
-# Start a murabi with
+```bat
+Rem Start a murabi with
 py job/main.py murabi deploy -p 8080
 
-# You can kill with fire (joke).
+Rem You can kill with fire (joke).
 py job/main.py murabi destroy
 ```
+
+## :game_die: Play around
+
+Go to `code/muir/play.html` and open it on two different pages in your browser.

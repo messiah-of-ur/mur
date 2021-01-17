@@ -11,3 +11,6 @@ set DB_PASS=murabi
 set DB_NAME=murabi
 
 set MURKER_ADDRESSES=host.docker.internal:9000,host.docker.internal:9001
+
+set POSTGRES_PASSWORD=%DB_PASS%
+set POSTGRES_USER=%DB_USER%

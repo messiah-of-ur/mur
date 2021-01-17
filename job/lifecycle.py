@@ -6,6 +6,9 @@ from pathlib import Path
 from abc import ABCMeta, abstractmethod
 
 
+FEASIBLE_CONTAINER_ID_LENGTH=10
+
+
 class Environment(Enum):
     CODE_DIR = 'CODE_DIR'
     JOB_DIR = 'JOB_DIR'
@@ -68,3 +71,14 @@ class Lifecycle:
             subprocess.run(cmd)
         finally:
             os.chdir(cwd)
+
+    def _kill_docker_container(self) -> None:
+        proc_store = self._proc_store()
+
+        with open(proc_store, 'r') as f:
+            container_id = f.readline()[:FEASIBLE_CONTAINER_ID_LENGTH]
+
+            p = subprocess.Popen(['docker', 'kill', container_id])
+            p.wait()
+        
+        open(proc_store, 'w').close()

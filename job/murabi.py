@@ -3,7 +3,7 @@ import logging
 import subprocess
 from pathlib import Path
 
-from job.lifecycle import Lifecycle, Environment
+from job.lifecycle import Lifecycle, FEASIBLE_CONTAINER_ID_LENGTH
 from job.murker import MurkerLifecycle
 
 
@@ -13,7 +13,6 @@ DOCKER_IMAGE="angler98/murabi:latest"
 
 HOST='host.docker.internal'
 ADDRESS_SPLITTER=","
-FEASIBLE_CONTAINER_ID_LENGTH=10
 
 
 class MurabiLifecycle(Lifecycle):
@@ -48,16 +47,7 @@ class MurabiLifecycle(Lifecycle):
     def kill(self) -> None:
         logging.info('Destroying murabi instance...')
 
-        proc_store = self._proc_store()
-
-        with open(proc_store, 'r') as f:
-            container_id = f.readline()[:FEASIBLE_CONTAINER_ID_LENGTH]
-            print(container_id)
-
-            p = subprocess.Popen(['docker', 'kill', container_id])
-            p.wait()
-        
-        open(proc_store, 'w').close()
+        self._kill_docker_container()
 
         logging.info('Done.')
 

@@ -5,6 +5,7 @@ from typing import List
 
 from job.murker import MurkerLifecycle
 from job.murabi import MurabiLifecycle
+from job.murdb import MurDBLifecycle
 
 
 DEFAULT_MURABI_PORT=8080
@@ -45,7 +46,13 @@ def parse_args() -> argparse.Namespace:
     murabi_deploy_parser = murabi_subparsers.add_parser(name='deploy')
     murabi_deploy_parser.add_argument("-p", help="Port for murabi to listen on", required=False, type=int, default=DEFAULT_MURABI_PORT)
 
-    murabi_deploy_parser = murabi_subparsers.add_parser(name='destroy')
+    murabi_subparsers.add_parser(name='destroy')
+
+    db_parser = subparsers.add_parser(name='db')
+    db_subparsers = db_parser.add_subparsers(dest='db_subparser')
+
+    db_subparsers.add_parser(name='deploy')
+    db_subparsers.add_parser(name='destroy')
 
     return parser.parse_args()
 
@@ -79,13 +86,22 @@ def run_murker_subcommand(args: argparse.Namespace) -> None:
 def run_murabi_subcommand(args: argparse.Namespace) -> None:
     murabi_port = parse_murabi_port(args)
 
-    murkerLifecycle = MurkerLifecycle([], murabi_port)
-    murabi = MurabiLifecycle(murkerLifecycle, murabi_port)
+    murker_lifecycle = MurkerLifecycle([], murabi_port)
+    murabi_lifecycle = MurabiLifecycle(murker_lifecycle, murabi_port)
 
     if args.murabi_subparser == 'deploy':
-        murabi.run()
+        murabi_lifecycle.run()
     elif args.murabi_subparser == 'destroy':
-        murabi.kill()
+        murabi_lifecycle.kill()
+
+
+def run_db_subcommand(args: argparse.Namespace) -> None:
+    db_lifecycle = MurDBLifecycle()
+
+    if args.db_subparser == 'deploy':
+        db_lifecycle.run()
+    elif args.db_subparser == 'destroy':
+        db_lifecycle.kill()
 
 
 if __name__ == '__main__':
@@ -96,3 +112,5 @@ if __name__ == '__main__':
         run_murker_subcommand(args)
     elif args.subparser == 'murabi':
         run_murabi_subcommand(args)
+    elif args.subparser == 'db':
+        run_db_subcommand(args)
