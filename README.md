@@ -17,6 +17,8 @@ You need the following installed:
 ### Prepare pipenv
 
 ```bash
+git submodule update --recursive --init
+
 # Setup the envars if you don't have direnv installed
 source .envrc
 
@@ -64,6 +66,8 @@ python3 job/main.py murabi destroy
 ### Prepare pipenv
 
 ```bat
+git submodule update --recursive --init
+
 Rem Setup the envars
 env.bat
 
