@@ -13,7 +13,7 @@ You need the following installed:
 
 ## Deployment under :penguin: :apple: *nix
 
-### :scream_cat: Murker
+### Prepare pipenv
 
 ```bash
 # Setup the envars if you don't have direnv installed
@@ -24,20 +24,34 @@ pipenv install
 
 # Open the python virtual environment
 pipenv shell
+```
 
+### :scream_cat: Murker
+
+```bash
 # Start a few murkers (an instance is started on each port).
-python3 job/main.py murker deploy -ports 8080 8081 8082 9000 -murabi-port 8080
+python3 job/main.py murker deploy -ports 9000 9001 -murabi-port 8080
 
 # Check for their existence.
 sudo lsof -i -P -n | grep LISTEN
 
-# Kill the murkers.
+# You can kill the murkers with.
 python3 job/main.py murker destroy
+```
+
+### :dragon_face: Murabi
+
+```bash
+# Start a murabi with
+python3 job/main.py murabi deploy -p 8080
+
+# You can kill with fire (joke).
+python3 job/main.py murabi destroy
 ```
 
 ## Deployment under :computer: Windows
 
-### :scream_cat: Murker
+### Prepare pipenv
 
 ```bat
 Rem Setup the envars
@@ -48,13 +62,27 @@ py -m pipenv install
 
 Rem Open the python virtual environment
 py -m pipenv shell
+```
 
+### :scream_cat: Murker
+
+```bat
 Rem Start a few murkers (an instance is started on each port).
-py job/main.py murker deploy -ports 8080 8081 8082 9000 -murabi-port 8080
+py job/main.py murker deploy -ports 9000 9001 -murabi-port 8080
 
 Rem Check for their existence.
 netstat -ano
 
 Rem Kill the murkers.
 py job/main.py murker destroy
+```
+
+### :dragon_face: Murabi
+
+```bash
+# Start a murabi with
+py job/main.py murabi deploy -p 8080
+
+# You can kill with fire (joke).
+py job/main.py murabi destroy
 ```

@@ -4,6 +4,10 @@ import argparse
 from typing import List
 
 from job.murker import MurkerLifecycle
+from job.murabi import MurabiLifecycle
+
+
+DEFAULT_MURABI_PORT=8080
 
 
 def configure_logging(log_level: int) -> None:
@@ -26,7 +30,6 @@ def parse_args() -> argparse.Namespace:
     subparsers = parser.add_subparsers(dest='subparser')
     
     murker_parser = subparsers.add_parser(name='murker')
-
     murker_subparsers = murker_parser.add_subparsers(dest='murker_subparser')
 
     murker_deploy_parser = murker_subparsers.add_parser(name='deploy')
@@ -36,7 +39,22 @@ def parse_args() -> argparse.Namespace:
     murker_subparsers.add_parser(name='destroy')
     murker_subparsers.add_parser(name='ports')
 
+    murabi_parser = subparsers.add_parser(name='murabi')
+    murabi_subparsers = murabi_parser.add_subparsers(dest='murabi_subparser')
+
+    murabi_deploy_parser = murabi_subparsers.add_parser(name='deploy')
+    murabi_deploy_parser.add_argument("-p", help="Port for murabi to listen on", required=False, type=int, default=DEFAULT_MURABI_PORT)
+
+    murabi_deploy_parser = murabi_subparsers.add_parser(name='destroy')
+
     return parser.parse_args()
+
+
+def parse_murabi_port(args: argparse.Namespace) -> int:
+    if 'murabi_port' in args:
+        return args.murabi_port
+
+    return DEFAULT_MURABI_PORT
 
 
 def run_murker_subcommand(args: argparse.Namespace) -> None:
@@ -45,10 +63,7 @@ def run_murker_subcommand(args: argparse.Namespace) -> None:
     else:
         ports = []
 
-    if 'murabi_port' in args:
-        murabi_port = args.murabi_port
-    else:
-        murabi_port = 8080
+    murabi_port = parse_murabi_port(args)
 
     murkerLifecycle = MurkerLifecycle(ports, murabi_port)
 
@@ -61,9 +76,23 @@ def run_murker_subcommand(args: argparse.Namespace) -> None:
         print(active_ports)
 
 
+def run_murabi_subcommand(args: argparse.Namespace) -> None:
+    murabi_port = parse_murabi_port(args)
+
+    murkerLifecycle = MurkerLifecycle([], murabi_port)
+    murabi = MurabiLifecycle(murkerLifecycle, murabi_port)
+
+    if args.murabi_subparser == 'deploy':
+        murabi.run()
+    elif args.murabi_subparser == 'destroy':
+        murabi.kill()
+
+
 if __name__ == '__main__':
     configure_logging(logging.INFO)
     args = parse_args()
 
     if args.subparser == 'murker':
         run_murker_subcommand(args)
+    elif args.subparser == 'murabi':
+        run_murabi_subcommand(args)

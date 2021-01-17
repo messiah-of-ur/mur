@@ -40,7 +40,12 @@ class Lifecycle:
         gen_dir = Path(jobs_dir, 'gen')
         job_name = self._name()
 
-        return Path(gen_dir, job_name)
+        gen_dir = Path(gen_dir, job_name)
+
+        if not os.path.exists(gen_dir):
+            os.mkdir(gen_dir)
+
+        return gen_dir
 
     def _bin_dir(self) -> Path:
         gen_dir = self._gen_dir()
@@ -49,6 +54,10 @@ class Lifecycle:
     def _log_dir(self) -> Path:
         gen_dir = self._gen_dir()
         return Path(gen_dir, 'log')
+
+    def _proc_store(self) -> Path:
+        gen_dir = self._gen_dir()
+        return Path(gen_dir, 'proc_store')
 
     @staticmethod
     def _run_process_from_dir(dir: Path, cmd: List[str]) -> None:

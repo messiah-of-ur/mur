@@ -111,10 +111,6 @@ class MurkerLifecycle(Lifecycle):
         bin_dir = self._bin_dir()
         return Path(bin_dir, 'murker.out')
     
-    def _proc_store(self) -> Path:
-        gen_dir = self._gen_dir()
-        return Path(gen_dir, 'proc_store')
-    
     def _port_store(self) -> Path:
         gen_dir = self._gen_dir()
         return Path(gen_dir, 'port_store')
