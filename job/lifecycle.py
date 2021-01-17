@@ -41,14 +41,18 @@ class Lifecycle:
     def _gen_dir(self) -> Path:
         jobs_dir = os.getenv(Environment.JOB_DIR.value)
         gen_dir = Path(jobs_dir, 'gen')
-        job_name = self._name()
-
-        gen_dir = Path(gen_dir, job_name)
 
         if not os.path.exists(gen_dir):
             os.mkdir(gen_dir)
 
-        return gen_dir
+        job_name = self._name()
+
+        job_den_dir = Path(gen_dir, job_name)
+
+        if not os.path.exists(job_den_dir):
+            os.mkdir(job_den_dir)
+
+        return job_den_dir
 
     def _bin_dir(self) -> Path:
         gen_dir = self._gen_dir()
